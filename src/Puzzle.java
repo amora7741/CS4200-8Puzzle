@@ -53,7 +53,7 @@ public class Puzzle {
             if(puzzle[i].equals(0))
                 continue;
 
-            for(int j = 0; j < puzzle.length; j++){
+            for(int j = i + 1; j < puzzle.length; j++){
                 if(puzzle[j].equals(0))
                     continue;
 
