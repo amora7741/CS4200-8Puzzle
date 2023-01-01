@@ -1,21 +1,19 @@
 package src;
 
-import java.util.LinkedList;
-
 public class Node {
     Node parent;
     Integer[] puzzle;
     int heuristic;
     int weight;
-    int cost;
+    int depth;
     int blankPosition = -1;
 
-    public Node(Node parent, Integer[] puzzle, int heuristic, int cost){
+    public Node(Node parent, Integer[] puzzle, int heuristic, int depth){
         this.parent = parent;
         this.puzzle = puzzle;
         this.heuristic = heuristic;
-        this.cost = cost;
-        weight = heuristic + cost;
+        this.depth = depth;
+        weight = heuristic + depth;
 
         blankPosition = getBlankPosition();
     }
@@ -36,21 +34,22 @@ public class Node {
         
         switch (action){
             case "u":
-                tempState = swapVals(tempState, tempBlank, tempBlank - 3);
+                tempState = MoveBlank.moveUp(tempState, tempBlank);
+                //swapVals(tempState, tempBlank, tempBlank - 3);
                 tempBlank -= 3;
                 break;
         
             case "d":
-                tempState = swapVals(tempState, tempBlank, tempBlank + 3);
+                tempState = MoveBlank.moveDown(tempState, tempBlank);//swapVals(tempState, tempBlank, tempBlank + 3);
                 tempBlank += 3;
                 break;
 
             case "l":
-                tempState = swapVals(tempState, tempBlank, --tempBlank);
+                tempState = MoveBlank.moveLeft(tempState, tempBlank--);//swapVals(tempState, tempBlank, --tempBlank);
                 break;
             
             case "r":
-                tempState = swapVals(tempState, tempBlank, ++tempBlank);
+                tempState = MoveBlank.moveRight(tempState, tempBlank++);//swapVals(tempState, tempBlank, ++tempBlank);
                 break;
 
             default:
@@ -85,13 +84,5 @@ public class Node {
         }
 
         return true;
-    }
-
-    private static Integer[] swapVals(Integer[] puzzle, int val1, int val2){
-        Integer temp = puzzle[val1];
-        puzzle[val1] = puzzle[val2];
-        puzzle[val2] = temp;
-
-        return puzzle;
     }
 }
