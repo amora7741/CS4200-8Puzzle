@@ -16,7 +16,7 @@ public class AStarSearch {
     private static Integer[] goalState = {0,1,2,3,4,5,6,7,8};
     private static Node emptyNode = new Node(null, temp, -1, -1);
 
-    public void aStar(Integer[] board, String heuristic){
+    public Node aStar(Integer[] board, String heuristic){
         Node startingNode = heuristic.equals("misplaced") ? new Node(emptyNode, board, getMisplacedTileCount(board), 0) : new Node(emptyNode, board, manhattanHeuristic(board), 0);
         Node finalNode = null;
         List<Node> exploredNodes = new ArrayList<>();
@@ -90,7 +90,7 @@ public class AStarSearch {
         }
 
         OutputData output = new OutputData(printSolution(finalNode, heuristic), searchCost);
-        return;
+        return finalNode;
     }
     
 
@@ -203,6 +203,7 @@ public class AStarSearch {
         Node currentNode = nodeCurrent;
         int solutionDepth = 0;
         String heurString = heuristic.equals("misplaced") ? "Misplaced Tiles" : "Manhattan Distance";
+        int step = 0;
 
         while(!currentNode.puzzle.equals(temp)){
             stack.push(currentNode);
@@ -212,8 +213,14 @@ public class AStarSearch {
 
         while(!stack.isEmpty()){
             if(heuristic.equals("manhattan")){
+                if(step == 0)
+                    System.out.println("\nInitial Puzzle\n-------------");
+                else
+                    System.out.printf("Step %d%n", step);
+
                 System.out.println((stack.pop().toString()));
                 System.out.println("-------------"); 
+                step++;
             }
             else
                 stack.pop();
@@ -223,6 +230,14 @@ public class AStarSearch {
         System.out.printf("%s Solution depth: %d", heurString, solutionDepth - 1);
 
         return solutionDepth;
+    }
+
+    public int getSolutionDepth(){
+        return solutionDepth;
+    }
+
+    public int getSearchCost(){
+        return searchCost;
     }
 
     private static boolean isEqual(Integer[] a, Integer[] b){

@@ -1,12 +1,15 @@
 package src;
 
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class Main {
 
     static Scanner sc = new Scanner(System.in);
     static AStarSearch search = new AStarSearch();
-
+    
     public static void main(String[] args){
         boolean validInput = false;
         String prompt = "Select:\n[1] Generate Random Puzzle\n[2] Enter Puzzle\n[3] Exit\n", validChoices = "123";
@@ -18,12 +21,13 @@ public class Main {
             choice = getChoice();
             
             if(validChoices.contains(String.valueOf(choice)))
-                validInput = true;
+            validInput = true;
         }
+        Main guh = new Main();
         
         switch (choice) {
             case 1:
-                randomPuzzle();
+                guh.randomPuzzle();
                 break;
             case 2:
                 userPuzzle();
@@ -38,7 +42,8 @@ public class Main {
         }
     }
 
-    public static void randomPuzzle(){
+    public void randomPuzzle(){
+        Map<Integer, ArrayList<OutputData>> completeData = new TreeMap<>();
         int testCases = 0;
         do {
             System.out.print("How many random puzzles would you like to solve? ");
@@ -47,9 +52,34 @@ public class Main {
 
         for(int i = 0; i < testCases; i++){
             Puzzle randomPuzzle = new Puzzle();
-            search.aStar(randomPuzzle.puzzle, "manhattan");
-            search.aStar(randomPuzzle.puzzle, "misplaced");
+            OutputData solution = solve(randomPuzzle);
+
+            if(!completeData.containsKey(solution.depth))
+                completeData.put(solution.depth, new ArrayList<>());
+
+            completeData.get(solution.depth).add(solution);
         }
+        
+        System.out.printf("Depth | Total Cases | Manhattan Search Cost | Manhattan Elapsed Time | Misplaced Search Cost | Misplaced Elapsed Time");
+
+        completeData.entrySet().stream().forEach((entry) -> {
+            int h1Average = 0, h1AvgTime = 0, h2Average = 0, h2AvgTime = 0, total = entry.getValue().size();
+
+            for(int i = 0; i < entry.getValue().size(); i++){
+                OutputData data = entry.getValue().get(i);
+                h1Average += data.searchCostH1;
+                h1AvgTime += data.totalTimeH1;
+                h2Average += data.searchCostH2;
+                h2AvgTime += data.totalTimeH2;
+            }
+            System.out.println();
+
+            System.out.printf("%3d %10d %20d %20d ms %25d %20d ms", entry.getKey(), total, (h1Average / total), (h1AvgTime/total), (h2Average/total), (h2AvgTime/total));
+
+            //System.out.println(entry.getKey() + " | " + total + " | " + (h1Average/total) + " | " + (h1AvgTime/total)
+                        //+ " ms | " + (h2Average/total) + " | " + (h2AvgTime/total) + " ms");
+        });
+
     }
 
     public static void userPuzzle(){
@@ -95,5 +125,39 @@ public class Main {
         puzzleString.replace("\n", "");
 
         return puzzleString;
+    }
+
+    private OutputData solve(Puzzle puzzleState){
+        long start = System.currentTimeMillis();
+        Node goalNode1 = search.aStar(puzzleState.puzzle.clone(), "manhattan");
+        long end1 = System.currentTimeMillis() - start;
+        int searchCost1 = search.getSearchCost();
+        System.out.println("\n------------------H1 DONE-------------------");
+        long start2 = System.currentTimeMillis();
+        Node goalNode2 = search.aStar(puzzleState.puzzle.clone(), "misplaced");
+        long end2 = System.currentTimeMillis() - start2;
+        int searchCost2 = search.getSearchCost();
+        System.out.println("\n------------------H2 DONE-------------------");
+
+        System.out.printf("%nSolved Using Manhattan Distance Heuristic%nSolution Depth: %d%nSearch Cost: %d%nTotal Time: %d ms%n", search.getSolutionDepth() + 1, searchCost1, end1);
+        System.out.printf("%nSolved Using Misplaced Tiles Heuristic%nSolution Depth: %d%nSearch Cost: %d%nTotal Time: %d ms%n%n", search.getSolutionDepth() + 1, searchCost2, end2);
+
+        return new OutputData(search.getSolutionDepth(), searchCost1, end1, searchCost2, end2);
+    }
+
+    private class OutputData {
+        public int depth;
+        public int searchCostH1;
+        public long totalTimeH1;
+        public int searchCostH2;
+        public long totalTimeH2;
+
+        public OutputData(int d, int sCostH1, long tTimeH1, int sCostH2, long tTimeH2){
+            depth = d;
+            searchCostH1 = sCostH1;
+            totalTimeH1 = tTimeH1;
+            searchCostH2 = sCostH2;
+            totalTimeH2 = tTimeH2;
+        }   
     }
 }
