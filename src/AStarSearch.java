@@ -10,22 +10,27 @@ import java.util.Queue;
 import java.util.Stack;
 import java.util.Iterator;
 
-public class MisplacedTiles {
+public class AStarSearch {
     private static int solutionDepth;
     private static int searchCost;
     private static Integer[] temp = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
     private static Integer[] goalState = {0,1,2,3,4,5,6,7,8};
     private static Node emptyNode = new Node(null, temp, -1, -1);
 
-    public static void solve(Integer[] board) {
-        Node startingNode = new Node(emptyNode, board, getMisplacedTileCount(board), 0);
+    public static void aStar(Integer[] board, int heuristic){
+        Node startingNode = heuristic == 1 ? new Node(emptyNode, board, getMisplacedTileCount(board), 0) : new Node(emptyNode, board, manhattanHeuristic(board), 0);
         Node finalNode = null;
         List<Node> exploredNodes = new ArrayList<>();
         boolean solutionReached = false;
         solutionDepth = 0;
         searchCost = 0;
 
-        PriorityQueue<Node> frontier = new PriorityQueue<>(Comparator.comparingInt(a -> a.weight));
+        PriorityQueue<Node> frontier;
+        if(heuristic == 1)
+            frontier = new PriorityQueue<>((final Node n1, final Node n2) -> (n1.depth + getMisplacedTileCount(n1.puzzle)) - (n2.depth + getMisplacedTileCount(n2.puzzle)));
+        else
+            frontier = new PriorityQueue<>((final Node n1, final Node n2) -> (n1.depth + manhattanHeuristic(n1.puzzle)) - (n2.depth + manhattanHeuristic(n2.puzzle)));
+
         frontier.add(startingNode);
         Node q;
         Queue<Node> children;
@@ -99,6 +104,25 @@ public class MisplacedTiles {
         }
 
         return count;
+    }
+
+    public static int manhattanHeuristic(Integer[] puzzle){
+        int totalDistance = 0;
+
+        for(int i = 0; i < puzzle.length; i++){
+            if(puzzle[i] == i || puzzle[i].equals(0))
+                continue;
+
+            int rowIndex = puzzle[i] / 3;
+            int columnIndex = puzzle[i] % 3;
+
+            int goalRow = i / 3;
+            int goalColumn = i % 3;
+
+            totalDistance += Math.abs(rowIndex - goalRow) + Math.abs(columnIndex - goalColumn);
+        }
+
+        return totalDistance;
     }
 
     private static Queue<Node> expandNode(Node parent){
@@ -190,7 +214,7 @@ public class MisplacedTiles {
             stack.pop();
         }
 
-        System.out.printf("Misplaced Tiles Heuristic Search Cost: %d%n", searchCost);
+        System.out.printf("Search Cost: %d%n", searchCost);
         System.out.printf("Solution depth: %d", solutionDepth - 1);
 
         return solutionDepth;
@@ -205,9 +229,11 @@ public class MisplacedTiles {
         return true;
     }
 
-    public static void main(String[] args) {
-        Integer[] puzzle = {1,7,4,8,6,2,3,5,0};
 
-        solve(puzzle);
+    public static void main(String[] args) {
+        Integer[] board = {1,8,7,3,0,2,6,4,5};
+        aStar(board.clone(), 1);
+        System.out.println();
+        aStar(board.clone(), 2);
     }
 }
