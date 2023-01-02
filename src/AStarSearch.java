@@ -202,6 +202,7 @@ public class AStarSearch {
         Stack<Node> stack = new Stack<>();
         Node currentNode = nodeCurrent;
         int solutionDepth = 0;
+        String heurString = heuristic == 1 ? "Misplaced Tiles" : "Manhattan Distance";
 
         while(!currentNode.puzzle.equals(temp)){
             stack.push(currentNode);
@@ -218,8 +219,8 @@ public class AStarSearch {
                 stack.pop();
         }
 
-        System.out.printf("Search Cost: %d%n", searchCost);
-        System.out.printf("Solution depth: %d", solutionDepth - 1);
+        System.out.printf("%n%s Search Cost: %d%n", heurString, searchCost);
+        System.out.printf("%s Solution depth: %d", heurString, solutionDepth - 1);
 
         return solutionDepth;
     }
