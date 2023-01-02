@@ -25,7 +25,7 @@ public class Main {
         }
         Main test = new Main();
         
-        switch (choice) { //user enter puzzle or generate random puzzle 
+        switch (choice) { //user enter puzzle or generate random puzzle based on user choice
             case 1:
                 test.randomPuzzle();
                 break;
@@ -45,6 +45,7 @@ public class Main {
     public void randomPuzzle(){
         Map<Integer, ArrayList<OutputData>> completeData = new TreeMap<>();
         int testCases = 0;
+
         do {
             System.out.print("How many random puzzles would you like to solve? ");
             testCases = getChoice();
