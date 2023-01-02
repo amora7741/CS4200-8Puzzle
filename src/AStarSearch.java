@@ -2,7 +2,6 @@ package src;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -211,7 +210,7 @@ public class AStarSearch {
         }
 
         while(!stack.isEmpty()){
-            stack.pop();
+            System.out.println(Arrays.toString(stack.pop().puzzle));
         }
 
         System.out.printf("Search Cost: %d%n", searchCost);
@@ -227,13 +226,5 @@ public class AStarSearch {
             }
         }
         return true;
-    }
-
-
-    public static void main(String[] args) {
-        Integer[] board = {1,8,7,3,0,2,6,4,5};
-        aStar(board.clone(), 1);
-        System.out.println();
-        aStar(board.clone(), 2);
     }
 }
