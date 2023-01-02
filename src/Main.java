@@ -23,6 +23,7 @@ public class Main {
             if(validChoices.contains(String.valueOf(choice))) //check if input is 1/2/3
                 validInput = true;
         }
+
         Main test = new Main();
         
         switch (choice) { //user enter puzzle or generate random puzzle based on user choice
@@ -42,23 +43,26 @@ public class Main {
         }
     }
 
+    /**
+     * 
+     */
     public void randomPuzzle(){
-        Map<Integer, ArrayList<OutputData>> completeData = new TreeMap<>();
+        Map<Integer, ArrayList<OutputData>> completeData = new TreeMap<>(); //treemap for storing data of multiple cases
         int testCases = 0;
 
         do {
             System.out.print("How many random puzzles would you like to solve? ");
-            testCases = getChoice();
+            testCases = getChoice(); //get amount of random puzzles to generate
         } while (testCases <= 0);
 
         for(int i = 0; i < testCases; i++){
-            Puzzle randomPuzzle = new Puzzle();
-            OutputData solution = solve(randomPuzzle);
+            Puzzle randomPuzzle = new Puzzle(); //generate random puzzle
+            OutputData solution = solve(randomPuzzle); //pass random puzzle into solve method to get corresponding data
 
-            if(!completeData.containsKey(solution.depth))
+            if(!completeData.containsKey(solution.depth)) //make new entry in data set if depth of random puzzle does not exist in the set
                 completeData.put(solution.depth, new ArrayList<>());
 
-            completeData.get(solution.depth).add(solution);
+            completeData.get(solution.depth).add(solution); //add data to the specified depth
         }
         
         System.out.printf("Depth | Total Cases | Manhattan Search Cost | Manhattan Elapsed Time | Misplaced Search Cost | Misplaced Elapsed Time");
@@ -86,18 +90,18 @@ public class Main {
         Integer[] temp = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
         Puzzle userPuzzle = new Puzzle(temp);
 
-        while(!puzzleCreated){
-            puzzleString = getPuzzle();
+        while(!puzzleCreated){ //loop until the puzzle is successfully created
+            puzzleString = getPuzzle(); //get input puzzle string from the user
 
-            puzzleCreated = userPuzzle.createPuzzle(puzzleString);
+            puzzleCreated = userPuzzle.createPuzzle(puzzleString); //attempt to create a puzzle with the given string, looping again if unsuccessful
         }
 
-        search.aStar(userPuzzle.puzzle, "manhattan");
+        search.aStar(userPuzzle.puzzle, "manhattan"); //solve puzzle using both heuristics
         search.aStar(userPuzzle.puzzle, "misplaced");
         
     }
 
-    public static int getChoice(){
+    public static int getChoice(){ //get and return user choice, printing an error message if anything other than an integer was entered
         int choice = -1;
 
         try {
@@ -109,7 +113,7 @@ public class Main {
         return choice;
     }
 
-    public static String getPuzzle(){
+    public static String getPuzzle(){ //get puzzle string from the user from standard input
         String puzzleString = "";
         int rows = 3;
 
@@ -117,7 +121,7 @@ public class Main {
 
         for(int i = 0; i < rows; i++){
             System.out.printf("Row %d: ", i + 1);
-            puzzleString += sc.nextLine().replace(" ", "");
+            puzzleString += sc.nextLine().replace(" ", ""); //make the string a continuous string of numbers, no spaces
         }
 
         puzzleString.replace("\n", "");
@@ -126,13 +130,14 @@ public class Main {
     }
 
     private OutputData solve(Puzzle puzzleState){
-        long start = System.currentTimeMillis();
-        Node goalNode1 = search.aStar(puzzleState.puzzle.clone(), "manhattan");
-        long end1 = System.currentTimeMillis() - start;
-        int searchCost1 = search.getSearchCost();
+        long start = System.currentTimeMillis(); //get starting time in milliseconds
+        Node goalNode1 = search.aStar(puzzleState.puzzle.clone(), "manhattan"); //solve the puzzle using the manhattan heuristic
+        long end1 = System.currentTimeMillis() - start; //get elapsed time in milliseconds
+        int searchCost1 = search.getSearchCost(); //get search cost of this heuristic
         System.out.println("\n------------------H1 DONE-------------------");
+
         long start2 = System.currentTimeMillis();
-        Node goalNode2 = search.aStar(puzzleState.puzzle.clone(), "misplaced");
+        Node goalNode2 = search.aStar(puzzleState.puzzle.clone(), "misplaced"); //solve using the misplaced tiles heuristic
         long end2 = System.currentTimeMillis() - start2;
         int searchCost2 = search.getSearchCost();
         System.out.println("\n------------------H2 DONE-------------------");
