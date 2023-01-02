@@ -36,7 +36,6 @@ public class Main {
             default:
                 break;
         }
-
     }
 
     public static void randomPuzzle(){
@@ -48,8 +47,8 @@ public class Main {
 
         for(int i = 0; i < testCases; i++){
             Puzzle randomPuzzle = new Puzzle();
-            search.aStar(randomPuzzle.puzzle, 2);
-            search.aStar(randomPuzzle.puzzle, 1);
+            search.aStar(randomPuzzle.puzzle, "manhattan");
+            search.aStar(randomPuzzle.puzzle, "misplaced");
         }
     }
 
@@ -65,8 +64,8 @@ public class Main {
             puzzleCreated = userPuzzle.createPuzzle(puzzleString);
         }
 
-        search.aStar(userPuzzle.puzzle, 2);
-        search.aStar(userPuzzle.puzzle, 1);
+        search.aStar(userPuzzle.puzzle, "manhattan");
+        search.aStar(userPuzzle.puzzle, "misplaced");
         
     }
 

@@ -16,8 +16,8 @@ public class AStarSearch {
     private static Integer[] goalState = {0,1,2,3,4,5,6,7,8};
     private static Node emptyNode = new Node(null, temp, -1, -1);
 
-    public void aStar(Integer[] board, int heuristic){
-        Node startingNode = heuristic == 1 ? new Node(emptyNode, board, getMisplacedTileCount(board), 0) : new Node(emptyNode, board, manhattanHeuristic(board), 0);
+    public void aStar(Integer[] board, String heuristic){
+        Node startingNode = heuristic.equals("misplaced") ? new Node(emptyNode, board, getMisplacedTileCount(board), 0) : new Node(emptyNode, board, manhattanHeuristic(board), 0);
         Node finalNode = null;
         List<Node> exploredNodes = new ArrayList<>();
         boolean solutionReached = false;
@@ -25,7 +25,7 @@ public class AStarSearch {
         searchCost = 0;
 
         PriorityQueue<Node> frontier;
-        if(heuristic == 1)
+        if(heuristic.equals("misplaced"))
             frontier = new PriorityQueue<>((final Node n1, final Node n2) -> (n1.depth + getMisplacedTileCount(n1.puzzle)) - (n2.depth + getMisplacedTileCount(n2.puzzle)));
         else
             frontier = new PriorityQueue<>((final Node n1, final Node n2) -> (n1.depth + manhattanHeuristic(n1.puzzle)) - (n2.depth + manhattanHeuristic(n2.puzzle)));
@@ -198,11 +198,11 @@ public class AStarSearch {
         return index;
     }
 
-    private static int printSolution(Node nodeCurrent, int heuristic){
+    private static int printSolution(Node nodeCurrent, String heuristic){
         Stack<Node> stack = new Stack<>();
         Node currentNode = nodeCurrent;
         int solutionDepth = 0;
-        String heurString = heuristic == 1 ? "Misplaced Tiles" : "Manhattan Distance";
+        String heurString = heuristic.equals("misplaced") ? "Misplaced Tiles" : "Manhattan Distance";
 
         while(!currentNode.puzzle.equals(temp)){
             stack.push(currentNode);
@@ -211,7 +211,7 @@ public class AStarSearch {
         }
 
         while(!stack.isEmpty()){
-            if(heuristic == 2){
+            if(heuristic.equals("manhattan")){
                 System.out.println((stack.pop().toString()));
                 System.out.println("-------------"); 
             }
