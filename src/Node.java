@@ -35,21 +35,20 @@ public class Node {
         switch (action){
             case "u":
                 tempState = MoveBlank.moveUp(tempState, tempBlank);
-                //swapVals(tempState, tempBlank, tempBlank - 3);
                 tempBlank -= 3;
                 break;
         
             case "d":
-                tempState = MoveBlank.moveDown(tempState, tempBlank);//swapVals(tempState, tempBlank, tempBlank + 3);
+                tempState = MoveBlank.moveDown(tempState, tempBlank);
                 tempBlank += 3;
                 break;
 
             case "l":
-                tempState = MoveBlank.moveLeft(tempState, tempBlank--);//swapVals(tempState, tempBlank, --tempBlank);
+                tempState = MoveBlank.moveLeft(tempState, tempBlank--);
                 break;
             
             case "r":
-                tempState = MoveBlank.moveRight(tempState, tempBlank++);//swapVals(tempState, tempBlank, ++tempBlank);
+                tempState = MoveBlank.moveRight(tempState, tempBlank++);
                 break;
 
             default:
@@ -84,5 +83,18 @@ public class Node {
         }
 
         return true;
+    }
+
+    public String toString(){
+        String puzzleString = "";
+
+        for(int i = 0; i < puzzle.length; i++){
+            if(i != 0 && i % 3 == 0)
+                puzzleString += "\n";
+
+            puzzleString += puzzle[i] + " ";
+        }
+
+        return puzzleString;
     }
 }

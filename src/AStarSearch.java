@@ -16,7 +16,7 @@ public class AStarSearch {
     private static Integer[] goalState = {0,1,2,3,4,5,6,7,8};
     private static Node emptyNode = new Node(null, temp, -1, -1);
 
-    public static void aStar(Integer[] board, int heuristic){
+    public void aStar(Integer[] board, int heuristic){
         Node startingNode = heuristic == 1 ? new Node(emptyNode, board, getMisplacedTileCount(board), 0) : new Node(emptyNode, board, manhattanHeuristic(board), 0);
         Node finalNode = null;
         List<Node> exploredNodes = new ArrayList<>();
@@ -89,7 +89,7 @@ public class AStarSearch {
             exploredNodes.add(q);
         }
 
-        OutputData output = new OutputData(printSolution(finalNode), searchCost);
+        OutputData output = new OutputData(printSolution(finalNode, heuristic), searchCost);
         return;
     }
     
@@ -172,7 +172,7 @@ public class AStarSearch {
         return node;
     }
 
-    private static int containsBoard(Node in, PriorityQueue<Node> q) {
+    private static int containsBoard(Node in, PriorityQueue<Node> q){
         Iterator<Node> i = q.iterator();
         int index = 0;
         while(i.hasNext()){
@@ -184,7 +184,7 @@ public class AStarSearch {
         return index;
     }
 
-    private static int containsBoard(Node in, List<Node> list) {
+    private static int containsBoard(Node in, List<Node> list){
         Iterator<Node> i = list.iterator();
         int index = 0;
         while(i.hasNext()){
@@ -198,7 +198,7 @@ public class AStarSearch {
         return index;
     }
 
-    private static int printSolution(Node nodeCurrent) {
+    private static int printSolution(Node nodeCurrent, int heuristic){
         Stack<Node> stack = new Stack<>();
         Node currentNode = nodeCurrent;
         int solutionDepth = 0;
@@ -210,7 +210,12 @@ public class AStarSearch {
         }
 
         while(!stack.isEmpty()){
-            System.out.println(Arrays.toString(stack.pop().puzzle));
+            if(heuristic == 2){
+                System.out.println((stack.pop().toString()));
+                System.out.println("-------------"); 
+            }
+            else
+                stack.pop();
         }
 
         System.out.printf("Search Cost: %d%n", searchCost);
@@ -219,7 +224,7 @@ public class AStarSearch {
         return solutionDepth;
     }
 
-    private static boolean isEqual(Integer[] a, Integer[] b) {
+    private static boolean isEqual(Integer[] a, Integer[] b){
         for(int i = 0; i < 9; i++){
             if(a[i] != b[i]){
                 return false;

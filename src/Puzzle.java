@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Puzzle {
-    private Integer[] puzzle;
+    public Integer[] puzzle;
     private boolean puzzleIsValid;
 
     public Puzzle(){
@@ -12,7 +12,27 @@ public class Puzzle {
     }
 
     public Puzzle(Integer[] puzzle){
-        this.puzzle = puzzle;
+
+    }
+
+    public boolean createPuzzle(String puzzleString){
+        if(!validPuzzle(puzzleString))
+            return false;
+
+        puzzle  = new Integer[9];
+
+        for(int i = 0; i < puzzleString.length(); i++){
+            Integer tileInt = Integer.parseInt(Character.toString(puzzleString.charAt(i)));
+
+            puzzle[i] = tileInt;
+        }
+
+        if(!boardIsSolvable(puzzle)){
+            System.out.println("The puzzle is not solvable!");
+            return false;
+        }
+
+        return true;
     }
 
     private void createRandomPuzzle(){
@@ -63,5 +83,38 @@ public class Puzzle {
         }
 
         return inversions % 2 == 0;
+    }
+
+    private boolean validPuzzle(String puzzleString){
+        int duplicateCheck = 0;
+
+        for(int i = 0; i < puzzleString.length(); i++){
+            try {
+                    Integer num = Integer.parseInt(Character.toString(puzzleString.charAt(i)));
+                    if(num < 0 || num > 8){
+                        System.out.println("All values must be between 0 and 8.");
+                        return false;
+                    }
+
+                    int val = puzzleString.charAt(i) - 'a';
+                    if ((duplicateCheck & (1 << val)) > 0){
+                        System.out.println("The puzzle cannot contain duplicate values!");
+                        return false;
+                    }
+
+                    duplicateCheck |= (1 << val);
+            } catch (NumberFormatException e) {
+                System.out.println("The puzzle contained non-integer values!");
+                return false;
+            }
+        }
+
+        if(puzzleString.length() != 9){
+            System.out.println("The puzzle did not contain 9 numbers!");;
+            return false;
+        }
+
+
+        return true;
     }
 }

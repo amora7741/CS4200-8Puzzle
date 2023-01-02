@@ -5,7 +5,9 @@ import java.util.Scanner;
 public class Main {
 
     static Scanner sc = new Scanner(System.in);
-    public static void main(String[] args) {
+    static AStarSearch search = new AStarSearch();
+
+    public static void main(String[] args){
         boolean validInput = false;
         String prompt = "Select:\n[1] Generate Random Puzzle\n[2] Enter Puzzle\n[3] Exit\n", validChoices = "123";
         int choice = -1;
@@ -38,12 +40,34 @@ public class Main {
     }
 
     public static void randomPuzzle(){
+        int testCases = 0;
+        do {
+            System.out.print("How many random puzzles would you like to solve? ");
+            testCases = getChoice();
+        } while (testCases <= 0);
 
+        for(int i = 0; i < testCases; i++){
+            Puzzle randomPuzzle = new Puzzle();
+            search.aStar(randomPuzzle.puzzle, 1);
+            search.aStar(randomPuzzle.puzzle, 2);
+        }
     }
 
     public static void userPuzzle(){
         boolean puzzleCreated = false;
+        String puzzleString;
+        Integer[] temp = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
+        Puzzle userPuzzle = new Puzzle(temp);
 
+        while(!puzzleCreated){
+            puzzleString = getPuzzle();
+
+            puzzleCreated = userPuzzle.createPuzzle(puzzleString);
+        }
+
+        search.aStar(userPuzzle.puzzle, 1);
+        search.aStar(userPuzzle.puzzle, 2);
+        
     }
 
     public static int getChoice(){
