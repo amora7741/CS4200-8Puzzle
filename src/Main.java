@@ -74,10 +74,7 @@ public class Main {
             }
             System.out.println();
 
-            System.out.printf("%3d %10d %20d %20d ms %25d %20d ms", entry.getKey(), total, (h1Average / total), (h1AvgTime/total), (h2Average/total), (h2AvgTime/total));
-
-            //System.out.println(entry.getKey() + " | " + total + " | " + (h1Average/total) + " | " + (h1AvgTime/total)
-                        //+ " ms | " + (h2Average/total) + " | " + (h2AvgTime/total) + " ms");
+            System.out.printf("%3d %10d %20d %20d ms %25d %20d ms", entry.getKey() + 1, total, (h1Average / total), (h1AvgTime/total), (h2Average/total), (h2AvgTime/total));
         });
 
     }
