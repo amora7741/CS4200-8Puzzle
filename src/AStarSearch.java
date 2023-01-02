@@ -36,6 +36,12 @@ public class AStarSearch {
 
         while (!frontier.isEmpty()) {
             q = frontier.poll();
+            if(Arrays.equals(q.puzzle,goalState)){
+                finalNode = q;
+                solutionReached = true;
+                break;
+            }
+            
             solutionDepth = q.depth;
             children = expandNode(q);
 

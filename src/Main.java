@@ -20,17 +20,17 @@ public class Main {
             System.out.print("Enter choice: ");
             choice = getChoice();
             
-            if(validChoices.contains(String.valueOf(choice)))
-            validInput = true;
+            if(validChoices.contains(String.valueOf(choice))) //check if input is 1/2/3
+                validInput = true;
         }
-        Main guh = new Main();
+        Main test = new Main();
         
-        switch (choice) {
+        switch (choice) { //user enter puzzle or generate random puzzle 
             case 1:
-                guh.randomPuzzle();
+                test.randomPuzzle();
                 break;
             case 2:
-                userPuzzle();
+                test.userPuzzle();
                 break;
             case 3:
                 System.out.println("Goodbye!");
@@ -79,7 +79,7 @@ public class Main {
 
     }
 
-    public static void userPuzzle(){
+    public void userPuzzle(){
         boolean puzzleCreated = false;
         String puzzleString;
         Integer[] temp = {-1,-1,-1,-1,-1,-1,-1,-1,-1};
