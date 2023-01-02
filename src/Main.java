@@ -72,8 +72,8 @@ public class Main {
 
             for(int i = 0; i < entry.getValue().size(); i++){
                 OutputData data = entry.getValue().get(i);
-                h1Average += data.searchCostH1;
-                h1AvgTime += data.totalTimeH1;
+                h1Average += data.searchCostH1; //store search cost of each entry
+                h1AvgTime += data.totalTimeH1; //store elapsed time of each entry
                 h2Average += data.searchCostH2;
                 h2AvgTime += data.totalTimeH2;
             }
